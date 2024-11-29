@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kabilan Chat Room</title>
+    <link rel="stylesheet" href="./CSS/style.css">
+</head>
+
+<body>
+
+
+
+    <div id="mainContent">
+
+
+        <div class="chat-header">
+            <div class="group-image">
+                <img src="./Images/group-logo.png" alt="Group Icon" />
+            </div>
+            <div class="group-info">
+                <h1 class="group-name">Tech Buddies</h1>
+                <p class="member-count"><span id="userCounts">1</span> Members <span class="online-indication"></span>
+                </p>
+            </div>
+            <div class="usernames">
+                <span id="fetchUsersNames">You</span><span id="moreUsers" class="more"></span>
+            </div>
+            <div class="header-actions">
+                <button class="action-btn">•••</button>
+            </div>
+        </div>
+
+
+        <div id="chat-box"></div>
+        <div id="input-box">
+            <input type="text" id="message-input" placeholder="Type a message..." />
+            <button id="send-btn" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <div class="modal" id="nameModal">
+        <div class="modal-content">
+            <h2>Enter Your Name</h2>
+            <input type="text" id="username" class="userName" placeholder="Enter your name" required>
+            <button onclick="submitName()">Submit</button>
+        </div>
+    </div>
+    <script src="./JS/script.js">
+
+    </script>
+</body>
+
+</html>
