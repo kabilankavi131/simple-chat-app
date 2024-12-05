@@ -66,7 +66,7 @@ function displayMessage(message, sender) {
     if (sender != userName) {
 
         nameContainer.textContent = sender;
-        messageDiv.classList.add('server');
+        messageDiv.classList.add('server', 'message');
     }
     dataContainer.textContent = message // Add message text
     messageDiv.appendChild(nameContainer);
@@ -76,7 +76,7 @@ function displayMessage(message, sender) {
 }
 
 function submitName() {
-    const username = document.getElementById('username').value;
+    const username = document.getElementById('username').value.replace(/\s+/g, '');
     userName = username;
     if (username) {
         document.getElementById('nameModal').style.display = 'none'; // Hide the modal
