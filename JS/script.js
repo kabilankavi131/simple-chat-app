@@ -7,11 +7,13 @@ let usersNames = [];
 
 const APINATOR_APP_KEY = 'your-app-key';
 const APINATOR_CLUSTER = 'us';
-const CHAT_CHANNEL = 'chat-room';
+const CHAT_CHANNEL = 'presence-chat-room';
+const APINATOR_AUTH_ENDPOINT = '/apinator/auth';
 
 const client = new Apinator({
     appKey: APINATOR_APP_KEY,
-    cluster: APINATOR_CLUSTER
+    cluster: APINATOR_CLUSTER,
+    authEndpoint: APINATOR_AUTH_ENDPOINT
 });
 
 const channel = client.connect().subscribe(CHAT_CHANNEL);
@@ -80,11 +82,23 @@ function sendMessage() {
 
     displayMessage(clientMessage, userName);
 
-    const result = channel.trigger?.('client-message', JSON.stringify(userDetails));
-    if (result && typeof result.catch === 'function') {
-        result.catch((error) => {
-            console.error('Failed to publish message to Apinator. Ensure channel/event auth is configured.', error);
-        });
+    const canTriggerClientEvents = CHAT_CHANNEL.startsWith('private-') || CHAT_CHANNEL.startsWith('presence-');
+
+    if (!canTriggerClientEvents) {
+        console.warn('Apinator client events require a private/presence channel. Update CHAT_CHANNEL to private-* or presence-*.');
+        messageInput.value = '';
+        return;
+    }
+
+    try {
+        const result = channel.trigger?.('client-message', JSON.stringify(userDetails));
+        if (result && typeof result.catch === 'function') {
+            result.catch((error) => {
+                console.error('Failed to publish message to Apinator. Ensure authEndpoint and channel auth are configured.', error);
+            });
+        }
+    } catch (error) {
+        console.error('Failed to publish message to Apinator. Client events require authorized private/presence channels.', error);
     }
 
     messageInput.value = '';
