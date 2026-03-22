@@ -1,88 +1,141 @@
+import { Apinator } from 'https://esm.sh/@apinator/client';
+
 const chatBox = document.getElementById('chat-box');
 const messageInput = document.getElementById('message-input');
-const sendBtn = document.getElementById('send-btn');
-let userName = "UnKnown"; // it will store only the current user name.
-let totalUsers = 0;
-let usersNames = [] // It will store all the connected users name who all connected to the server at a moment
-// Connect to the WebSocket server
-const ws = new WebSocket('wss://kabilan-websocket-server.glitch.me/');
+let userName = 'UnKnown';
+let usersNames = [];
 
-ws.onopen = () => {
-    console.log('Connected to WebSocket server.');
-};
+const APINATOR_APP_KEY = 'your-app-key';
+const APINATOR_CLUSTER = 'us';
+const CHAT_CHANNEL = 'presence-chat-room';
+const APINATOR_AUTH_ENDPOINT = '/apinator/auth';
 
-ws.onmessage = (event) => {
-    const serverMessage = JSON.parse(event.data);
+const client = new Apinator({
+    appKey: APINATOR_APP_KEY,
+    cluster: APINATOR_CLUSTER,
+    authEndpoint: APINATOR_AUTH_ENDPOINT
+});
 
-    console.log(serverMessage);
+const channel = client.connect().subscribe(CHAT_CHANNEL);
 
-    // Destructure the message and username from the server response
-    const { username, message, userCount, users } = serverMessage;
+channel.bind('message', (payload) => {
+    const data = normalizeMessagePayload(payload);
+    handleIncomingMessage(data);
+});
+
+channel.bind('client-message', (payload) => {
+    const data = normalizeMessagePayload(payload);
+    handleIncomingMessage(data);
+});
+
+function normalizeMessagePayload(payload) {
+    if (typeof payload === 'string') {
+        try {
+            return JSON.parse(payload);
+        } catch {
+            return { username: 'server', message: payload };
+        }
+    }
+
+    if (payload && typeof payload === 'object') {
+        return payload;
+    }
+
+    return { username: 'server', message: String(payload) };
+}
+
+function handleIncomingMessage(serverMessage) {
+    const { username, message, users = [] } = serverMessage;
+
     usersNames = users;
-    document.getElementById("userCounts").innerText = userCount;
-    let dummy = "";
-    for (let i = 0; i < usersNames.length; i++) {
+    const userCount = usersNames.length || 1;
+
+    document.getElementById('userCounts').innerText = String(userCount);
+
+    let dummy = '';
+    for (let i = 0; i < usersNames.length; i += 1) {
         if (i < 3) {
-            dummy += usersNames[i] + ",";
+            dummy += `${usersNames[i]},`;
         }
-        if (i == 3) {
-            dummy += usersNames[i] + ", ...";
+        if (i === 3) {
+            dummy += `${usersNames[i]}, ...`;
         }
-    }
-    document.getElementById("fetchUsersNames").innerText = dummy;
-    if (userCount >= 4) {
-        document.getElementById("moreUsers").innerText = `+ ${userCount - 4} more`;
     }
 
-    // Display the message in the UI
+    document.getElementById('fetchUsersNames').innerText = dummy || 'You';
+    document.getElementById('moreUsers').innerText = userCount >= 4 ? `+ ${userCount - 4} more` : '';
+
     displayMessage(message, username || 'server');
-};
-
-ws.onclose = () => {
-    console.log('Disconnected from WebSocket server.');
-};
-
+}
 
 function sendMessage() {
     const clientMessage = messageInput.value.trim();
-    if (clientMessage) {
-        displayMessage(clientMessage, userName); // Display on UI
-        const userDetails = {
-            "username": userName,
-            "message": clientMessage
-        }
-        ws.send(JSON.stringify(userDetails)); // Send to server
-        messageInput.value = ''; // Clear input field
+    if (!clientMessage) {
+        return;
     }
+
+    const userDetails = {
+        username: userName,
+        message: clientMessage,
+        users: usersNames
+    };
+
+    displayMessage(clientMessage, userName);
+
+    const canTriggerClientEvents = CHAT_CHANNEL.startsWith('private-') || CHAT_CHANNEL.startsWith('presence-');
+
+    if (!canTriggerClientEvents) {
+        console.warn('Apinator client events require a private/presence channel. Update CHAT_CHANNEL to private-* or presence-*.');
+        messageInput.value = '';
+        return;
+    }
+
+    try {
+        const result = channel.trigger?.('client-message', JSON.stringify(userDetails));
+        if (result && typeof result.catch === 'function') {
+            result.catch((error) => {
+                console.error('Failed to publish message to Apinator. Ensure authEndpoint and channel auth are configured.', error);
+            });
+        }
+    } catch (error) {
+        console.error('Failed to publish message to Apinator. Client events require authorized private/presence channels.', error);
+    }
+
+    messageInput.value = '';
 }
 
 function displayMessage(message, sender) {
     const messageDiv = document.createElement('div');
     const nameContainer = document.createElement('div');
     const dataContainer = document.createElement('div');
+
     nameContainer.classList.add('nameContainer');
     dataContainer.classList.add('dataContainer');
-    messageDiv.classList.add('client', 'message', sender); // Apply styles based on sender
-    if (sender != userName) {
+    messageDiv.classList.add('client', 'message', sender);
 
+    if (sender !== userName) {
         nameContainer.textContent = sender;
         messageDiv.classList.add('server', 'message');
     }
-    dataContainer.textContent = message // Add message text
+
+    dataContainer.textContent = message;
     messageDiv.appendChild(nameContainer);
     messageDiv.appendChild(dataContainer);
-    chatBox.appendChild(messageDiv); // Add to chat box
-    chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
+    chatBox.appendChild(messageDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 function submitName() {
     const username = document.getElementById('username').value.replace(/\s+/g, '');
     userName = username;
+
     if (username) {
-        document.getElementById('nameModal').style.display = 'none'; // Hide the modal
-        document.getElementById('mainContent').style.display = 'block'; // Show main content
+        document.getElementById('nameModal').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
     } else {
         alert('Please enter your name.');
     }
 }
 
+window.sendMessage = sendMessage;
+window.submitName = submitName;
