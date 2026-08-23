@@ -7,6 +7,10 @@
   --accent: #6c63ff;
   --accent-dark: #554be8;
   --surface: #ffffff;
+  --chat-bg: #fbfcff;
+  --input-bg: #f7f8fb;
+  --incoming: #ffffff;
+  --incoming-text: #344050;
 }
 
 * { box-sizing: border-box; }
@@ -41,7 +45,7 @@ button { cursor: pointer; }
   min-height: 86px;
   padding: 16px 22px;
   border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255, .96);
+  background: var(--surface);
 }
 
 .group-image {
@@ -75,7 +79,7 @@ button { cursor: pointer; }
   height: calc(100% - 162px);
   padding: 25px 25px 16px;
   overflow-y: auto;
-  background-color: #fbfcff;
+  background-color: var(--chat-bg);
   background-image: radial-gradient(#dbe0eb 1px, transparent 1px);
   background-size: 22px 22px;
   scrollbar-width: thin;
@@ -92,28 +96,38 @@ button { cursor: pointer; }
   overflow-wrap: anywhere;
   animation: message-in .24s ease-out both;
 }
+.message-meta { display: flex; align-items: center; gap: 6px; margin-top: 5px; color: #98a3b3; font-size: 10px; }
+.client .message-meta { justify-content: flex-end; color: rgba(255, 255, 255, .72); }
 .nameContainer { margin-bottom: 3px; color: #6573d7; font-size: 11px; font-weight: 700; }
-.dataContainer { color: #344050; font-size: 14px; line-height: 1.45; }
-.client { align-self: flex-end; border-radius: 16px 16px 4px; background: linear-gradient(135deg, #746cff, #5e55e9); box-shadow: 0 5px 12px rgba(94, 85, 233, .22); }
-.client .dataContainer { color: #fff; }
-.server { align-self: flex-start; border: 1px solid #edf0f5; background: #fff; }
+.dataContainer { color: var(--incoming-text); font-size: 14px; line-height: 1.45; }
+.client { align-self: flex-end; border-radius: 18px 18px 5px 18px; background: linear-gradient(135deg, #7e78ff, #5148dd); box-shadow: 0 7px 16px rgba(94, 85, 233, .27); }
+.client .dataContainer { color: #fff !important; }
+.server { align-self: flex-start; border: 1px solid var(--line); border-radius: 18px 18px 18px 5px; background: var(--incoming); }
+.chat-welcome { display: grid; place-items: center; gap: 7px; width: min(100%, 300px); margin: auto; padding: 24px; color: var(--muted); text-align: center; }
+.chat-welcome strong { color: var(--ink); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; }
+.chat-welcome span { font-size: 13px; }
+.welcome-orb { display: grid; place-items: center; width: 50px; height: 50px; margin-bottom: 3px; color: #fff; border-radius: 18px; background: linear-gradient(135deg, #8f8aff, #5b51ea); box-shadow: 0 10px 25px rgba(91, 81, 234, .25); font-size: 22px; }
 @keyframes message-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
 #input-box {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 9px;
   height: 76px;
   padding: 14px 20px;
   border-top: 1px solid var(--line);
-  background: #fff;
+  background: var(--surface);
 }
 .utility-btn { flex: 0 0 38px; font-size: 19px; }
-#message-input { flex: 1; min-width: 0; height: 46px; padding: 0 15px; color: var(--ink); outline: none; border: 1px solid #e5e9f0; border-radius: 14px; background: #f7f8fb; transition: border-color .2s, box-shadow .2s; }
+#message-input { flex: 1; min-width: 0; height: 46px; padding: 0 15px; color: var(--ink); outline: none; border: 1px solid var(--line); border-radius: 14px; background: var(--input-bg); transition: border-color .2s, box-shadow .2s; }
 #message-input::placeholder { color: #9aa5b2; }
-#message-input:focus { border-color: #aaa5ff; box-shadow: 0 0 0 4px #efeeff; background: #fff; }
+#message-input:focus { border-color: #aaa5ff; box-shadow: 0 0 0 4px #efeeff; background: var(--surface); }
 #send-btn { height: 46px; padding: 0 17px; color: #fff; border: 0; border-radius: 14px; background: var(--accent); font-weight: 700; box-shadow: 0 5px 12px rgba(108, 99, 255, .26); transition: transform .2s, background .2s; }
 #send-btn:hover { background: var(--accent-dark); transform: translateY(-1px); }
+.emoji-picker { position: absolute; bottom: 66px; left: 20px; display: flex; gap: 3px; padding: 7px; border: 1px solid var(--line); border-radius: 13px; background: var(--surface); box-shadow: 0 10px 25px rgba(38, 47, 74, .15); }
+.emoji-picker button { width: 30px; height: 30px; padding: 0; border: 0; border-radius: 8px; background: transparent; font-size: 16px; }
+.emoji-picker button:hover { background: #f0efff; }
 
 .modal { position: fixed; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(24, 30, 48, .36); backdrop-filter: blur(9px); }
 .modal-content { width: min(100%, 390px); padding: 32px; border: 1px solid rgba(255, 255, 255, .8); border-radius: 24px; background: rgba(255, 255, 255, .96); box-shadow: 0 25px 70px rgba(24, 30, 48, .25); text-align: center; }
@@ -123,6 +137,27 @@ button { cursor: pointer; }
 .userName { width: 100%; height: 47px; padding: 0 13px; margin-bottom: 13px; outline: none; border: 1px solid #e1e5ed; border-radius: 12px; }
 .userName:focus { border-color: #aaa5ff; box-shadow: 0 0 0 4px #efeeff; }
 .modal-content button { width: 100%; height: 47px; color: #fff; border: 0; border-radius: 12px; background: var(--accent); font-weight: 700; }
+
+body.dark-theme {
+  --ink: #eff2ff;
+  --muted: #a6afc1;
+  --line: #30384c;
+  --surface: #1d2331;
+  --chat-bg: #171c29;
+  --input-bg: #252c3d;
+  --incoming: #252c3d;
+  --incoming-text: #f0f3fb;
+  background: #101521;
+  background-image: radial-gradient(circle at 8% 8%, rgba(79, 98, 172, .35), transparent 27rem), radial-gradient(circle at 93% 88%, rgba(108, 65, 165, .25), transparent 30rem);
+}
+body.dark-theme #mainContent { border-color: #333b50; box-shadow: 0 24px 65px rgba(0, 0, 0, .35); }
+body.dark-theme #chat-box { background-image: radial-gradient(#343d53 1px, transparent 1px); }
+body.dark-theme .group-image { border-color: #293043; }
+body.dark-theme .action-btn, body.dark-theme .utility-btn { color: #b9c2d7; }
+body.dark-theme .action-btn:hover, body.dark-theme .utility-btn:hover, body.dark-theme .emoji-picker button:hover { background: #2b3348; color: #c3bfff; }
+body.dark-theme .modal { background: rgba(4, 7, 14, .65); }
+body.dark-theme .modal-content { border-color: #3a4358; background: #1d2331; }
+body.dark-theme .userName { color: var(--ink); border-color: var(--line); background: var(--input-bg); }
 
 @media (max-width: 560px) {
   #mainContent { width: 100%; height: 100vh; margin: 0; border: 0; border-radius: 0; }

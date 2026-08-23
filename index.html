@@ -21,21 +21,37 @@
             </div>
             <div class="group-info">
                 <h1 class="group-name">Tech Buddies</h1>
-                <p class="member-count"><span id="userCounts">1</span> Members <span class="online-indication"></span>
+                <p class="member-count"><span class="online-indication"></span><span id="connectionStatus">Connecting…</span> · <span id="userCounts">1</span> members
                 </p>
             </div>
             <div class="usernames">
                 <span id="fetchUsersNames">You</span><span id="moreUsers" class="more"></span>
             </div>
             <div class="header-actions">
+                <button id="theme-toggle" class="action-btn" type="button" aria-label="Switch to dark theme" title="Switch theme">
+                    <span aria-hidden="true">☾</span>
+                </button>
                 <button class="action-btn" aria-label="More chat options">•••</button>
             </div>
         </div>
 
 
-        <div id="chat-box"></div>
+        <div id="chat-box">
+            <div class="chat-welcome" id="chatWelcome">
+                <div class="welcome-orb">✦</div>
+                <strong>Welcome to Tech Buddies</strong>
+                <span>Say hello and start the conversation.</span>
+            </div>
+        </div>
         <div id="input-box">
-            <button class="utility-btn" type="button" aria-label="Add attachment">+</button>
+            <button id="emoji-toggle" class="utility-btn" type="button" aria-label="Add an emoji">☺</button>
+            <div class="emoji-picker" id="emoji-picker" hidden>
+                <button type="button" aria-label="Smile">😊</button>
+                <button type="button" aria-label="Thumbs up">👍</button>
+                <button type="button" aria-label="Celebrate">🎉</button>
+                <button type="button" aria-label="Heart">💜</button>
+                <button type="button" aria-label="Rocket">🚀</button>
+            </div>
             <input type="text" id="message-input" placeholder="Type a message..." />
             <button id="send-btn" type="button" onclick="sendMessage()">Send <span aria-hidden="true">↗</span></button>
         </div>
