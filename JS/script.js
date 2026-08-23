@@ -25,19 +25,10 @@ ws.onmessage = (event) => {
     const { username, message, userCount, users } = serverMessage;
     usersNames = users;
     document.getElementById("userCounts").innerText = userCount;
-    let dummy = "";
-    for (let i = 0; i < usersNames.length; i++) {
-        if (i < 3) {
-            dummy += usersNames[i] + ",";
-        }
-        if (i == 3) {
-            dummy += usersNames[i] + ", ...";
-        }
-    }
-    document.getElementById("fetchUsersNames").innerText = dummy;
-    if (userCount >= 4) {
-        document.getElementById("moreUsers").innerText = `+ ${userCount - 4} more`;
-    }
+    const visibleUsers = usersNames.slice(0, 3);
+    document.getElementById("fetchUsersNames").innerText = visibleUsers.join(", ") || "You";
+    const remainingUsers = Math.max(0, userCount - visibleUsers.length);
+    document.getElementById("moreUsers").innerText = remainingUsers ? ` + ${remainingUsers} more` : "";
 
     // Display the message in the UI
     displayMessage(message, username || 'server');
@@ -131,7 +122,8 @@ function submitName() {
     userName = username;
     if (username) {
         document.getElementById('nameModal').style.display = 'none'; // Hide the modal
-        document.getElementById('mainContent').style.display = 'block'; // Show main content
+        document.getElementById('mainContent').style.display = 'flex'; // Show main content
+        messageInput.focus();
     } else {
         alert('Please enter your name.');
     }

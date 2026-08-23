@@ -29,6 +29,7 @@ button { cursor: pointer; }
 
 #mainContent {
   display: none;
+  flex-direction: column;
   width: min(100% - 32px, 920px);
   height: min(820px, calc(100vh - 48px));
   margin: 24px auto;
@@ -169,7 +170,8 @@ body.dark-theme .userName { color: var(--ink); border-color: var(--line); backgr
   .usernames { display: none; }
   .header-actions { margin-left: auto; gap: 1px; }
   .action-btn { width: 42px; height: 42px; border-radius: 14px; }
-  #chat-box { height: calc(100% - 152px); padding: 18px 12px 12px; }
+  #chat-box { flex: 1 1 auto; min-height: 0; height: auto; padding: 18px 12px 12px; }
+  .chat-header, #input-box { flex: 0 0 auto; }
   .message { max-width: 88%; padding: 10px 12px; }
   #input-box { height: 82px; padding: 12px max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); gap: 7px; }
   .utility-btn { display: grid; width: 42px; height: 42px; flex-basis: 42px; border-radius: 14px; }
