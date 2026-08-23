@@ -5,7 +5,7 @@ let userName = "UnKnown"; // it will store only the current user name.
 let totalUsers = 0;
 let usersNames = [] // It will store all the connected users name who all connected to the server at a moment
 // Connect to the WebSocket server
-const ws = new WebSocket('wss://kabilan-websocket-server.glitch.me/');
+const ws = new WebSocket('https://websocket-server-1-k9xu.onrender.com/');
 
 ws.onopen = () => {
     console.log('Connected to WebSocket server.');
