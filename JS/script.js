@@ -27,23 +27,33 @@ const ws = new WebSocket('https://websocket-server-1-k9xu.onrender.com/');
 ws.onopen = () => {
     console.log('Connected to WebSocket server.');
     connectionStatus.textContent = 'Live now';
+    if (userName !== 'UnKnown') {
+        ws.send(JSON.stringify({ type: 'identify', username: userName }));
+    }
 };
 
 ws.onmessage = (event) => {
-    const serverMessage = JSON.parse(event.data);
+    let serverMessage;
+    try {
+        serverMessage = JSON.parse(event.data);
+    } catch {
+        return;
+    }
 
     console.log(serverMessage);
 
     // Destructure the message and username from the server response
     const { username, message, users } = serverMessage;
-    usersNames = users || [];
-    const activeUserCount = usersNames.length;
-    document.getElementById("userCounts").innerText = activeUserCount;
-    const visibleUsers = usersNames.slice(0, 3);
-    document.getElementById("fetchUsersNames").innerText = visibleUsers.join(", ") || "You";
-    const remainingUsers = Math.max(0, activeUserCount - visibleUsers.length);
-    document.getElementById("moreUsers").innerText = remainingUsers ? ` + ${remainingUsers} more` : "";
-    renderParticipants();
+    if (Array.isArray(users)) {
+        usersNames = users.filter((name) => typeof name === 'string' && name.trim());
+        const activeUserCount = usersNames.length;
+        document.getElementById("userCounts").innerText = activeUserCount;
+        const visibleUsers = usersNames.slice(0, 3);
+        document.getElementById("fetchUsersNames").innerText = visibleUsers.join(", ") || "You";
+        const remainingUsers = Math.max(0, activeUserCount - visibleUsers.length);
+        document.getElementById("moreUsers").innerText = remainingUsers ? ` + ${remainingUsers} more` : "";
+        renderParticipants();
+    }
 
     if (serverMessage.type !== 'message') return;
     if (typeof message !== 'string' || !message.trim()) return;
@@ -222,6 +232,9 @@ function submitName() {
     if (username) {
         document.getElementById('nameModal').style.display = 'none'; // Hide the modal
         document.getElementById('mainContent').style.display = 'flex'; // Show main content
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ type: 'identify', username: userName }));
+        }
         messageInput.focus();
         renderParticipants();
     } else {
