@@ -5,6 +5,11 @@ const themeToggle = document.getElementById('theme-toggle');
 const emojiToggle = document.getElementById('emoji-toggle');
 const emojiPicker = document.getElementById('emoji-picker');
 const connectionStatus = document.getElementById('connectionStatus');
+const participantsToggle = document.getElementById('participants-toggle');
+const participantsOverlay = document.getElementById('participants-overlay');
+const participantsClose = document.getElementById('participants-close');
+const participantsList = document.getElementById('participants-list');
+const participantsCount = document.getElementById('participants-count');
 let userName = "UnKnown"; // it will store only the current user name.
 let totalUsers = 0;
 let usersNames = [] // It will store all the connected users name who all connected to the server at a moment
@@ -29,6 +34,7 @@ ws.onmessage = (event) => {
     document.getElementById("fetchUsersNames").innerText = visibleUsers.join(", ") || "You";
     const remainingUsers = Math.max(0, userCount - visibleUsers.length);
     document.getElementById("moreUsers").innerText = remainingUsers ? ` + ${remainingUsers} more` : "";
+    renderParticipants();
 
     // Display the message in the UI
     displayMessage(message, username || 'server');
@@ -94,6 +100,41 @@ function applyTheme(theme) {
     localStorage.setItem('chat-theme', theme);
 }
 
+function renderParticipants() {
+    const members = usersNames.length ? usersNames : [userName];
+    participantsCount.textContent = members.length;
+    participantsList.replaceChildren(...members.map((member) => {
+        const item = document.createElement('div');
+        const avatar = document.createElement('div');
+        const name = document.createElement('span');
+        const you = document.createElement('span');
+        item.className = 'participant';
+        avatar.className = 'participant-avatar';
+        name.className = 'participant-name';
+        avatar.textContent = member.slice(0, 1).toUpperCase();
+        name.textContent = member;
+        item.append(avatar, name);
+        if (member === userName) {
+            you.className = 'participant-you';
+            you.textContent = 'You';
+            item.appendChild(you);
+        }
+        return item;
+    }));
+}
+
+function setParticipantsOpen(isOpen) {
+    participantsOverlay.hidden = !isOpen;
+    participantsToggle.setAttribute('aria-expanded', String(isOpen));
+    if (isOpen) renderParticipants();
+}
+
+participantsToggle.addEventListener('click', () => setParticipantsOpen(participantsOverlay.hidden));
+participantsClose.addEventListener('click', () => setParticipantsOpen(false));
+participantsOverlay.addEventListener('click', (event) => {
+    if (event.target === participantsOverlay) setParticipantsOpen(false);
+});
+
 themeToggle.addEventListener('click', () => {
     applyTheme(document.body.classList.contains('dark-theme') ? 'light' : 'dark');
 });
@@ -124,6 +165,7 @@ function submitName() {
         document.getElementById('nameModal').style.display = 'none'; // Hide the modal
         document.getElementById('mainContent').style.display = 'flex'; // Show main content
         messageInput.focus();
+        renderParticipants();
     } else {
         alert('Please enter your name.');
     }

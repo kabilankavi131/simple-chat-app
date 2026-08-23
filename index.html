@@ -28,6 +28,9 @@
                 <span id="fetchUsersNames">You</span><span id="moreUsers" class="more"></span>
             </div>
             <div class="header-actions">
+                <button id="participants-toggle" class="action-btn" type="button" aria-label="View chat members" aria-expanded="false" title="Chat members">
+                    <span aria-hidden="true">👥</span>
+                </button>
                 <button id="theme-toggle" class="action-btn" type="button" aria-label="Switch to dark theme" title="Switch theme">
                     <span aria-hidden="true">☾</span>
                 </button>
@@ -62,6 +65,19 @@
             <input type="text" id="username" class="userName" placeholder="Enter your name" required>
             <button onclick="submitName()">Submit</button>
         </div>
+    </div>
+    <div class="participants-overlay" id="participants-overlay" hidden>
+        <section class="participants-panel" role="dialog" aria-modal="true" aria-labelledby="participants-title">
+            <div class="participants-heading">
+                <div>
+                    <span class="panel-eyebrow">CHAT MEMBERS</span>
+                    <h2 id="participants-title">Who's here</h2>
+                </div>
+                <button id="participants-close" class="action-btn" type="button" aria-label="Close members panel">×</button>
+            </div>
+            <p class="participants-subtitle"><span id="participants-count">0</span> people in this conversation</p>
+            <div class="participants-list" id="participants-list"></div>
+        </section>
     </div>
     <script src="./JS/script.js">
 
