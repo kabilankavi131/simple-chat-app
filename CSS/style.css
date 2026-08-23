@@ -160,13 +160,30 @@ body.dark-theme .modal-content { border-color: #3a4358; background: #1d2331; }
 body.dark-theme .userName { color: var(--ink); border-color: var(--line); background: var(--input-bg); }
 
 @media (max-width: 560px) {
-  #mainContent { width: 100%; height: 100vh; margin: 0; border: 0; border-radius: 0; }
-  .chat-header { min-height: 74px; padding: 13px 15px; }
-  .group-image { flex-basis: 43px; width: 43px; height: 43px; margin-right: 10px; }
+  body { min-height: 100dvh; }
+  #mainContent { width: 100%; height: 100vh; height: 100dvh; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
+  .chat-header { min-height: 70px; padding: 11px 12px; }
+  .group-image { flex-basis: 42px; width: 42px; height: 42px; margin-right: 9px; border-radius: 14px; }
+  .group-name { max-width: 145px; overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
+  .member-count { font-size: 11px; white-space: nowrap; }
   .usernames { display: none; }
-  #chat-box { height: calc(100% - 150px); padding: 20px 15px 12px; }
-  #input-box { height: 76px; padding: 13px 12px; gap: 6px; }
-  .utility-btn { display: none; }
-  #send-btn { padding: 0 14px; }
-  .message { max-width: 84%; }
+  .header-actions { margin-left: auto; gap: 1px; }
+  .action-btn { width: 42px; height: 42px; border-radius: 14px; }
+  #chat-box { height: calc(100% - 152px); padding: 18px 12px 12px; }
+  .message { max-width: 88%; padding: 10px 12px; }
+  #input-box { height: 82px; padding: 12px max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); gap: 7px; }
+  .utility-btn { display: grid; width: 42px; height: 42px; flex-basis: 42px; border-radius: 14px; }
+  #message-input { height: 48px; font-size: 16px; border-radius: 15px; }
+  #send-btn { min-width: 62px; height: 48px; padding: 0 13px; border-radius: 15px; }
+  .emoji-picker { bottom: 72px; left: 12px; max-width: calc(100vw - 24px); overflow-x: auto; }
+  .modal { align-items: end; padding: 12px; }
+  .modal-content { width: 100%; padding: 26px 22px max(26px, env(safe-area-inset-bottom)); border-radius: 24px 24px 18px 18px; }
+}
+
+@media (max-width: 380px) {
+  .group-name { max-width: 115px; }
+  .member-count { max-width: 120px; overflow: hidden; text-overflow: ellipsis; }
+  #send-btn { min-width: 48px; padding: 0; font-size: 0; }
+  #send-btn span { font-size: 19px; }
+  #input-box { gap: 5px; }
 }

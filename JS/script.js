@@ -118,6 +118,12 @@ emojiPicker.addEventListener('click', (event) => {
     messageInput.focus();
 });
 
+document.addEventListener('click', (event) => {
+    if (!emojiPicker.contains(event.target) && event.target !== emojiToggle) {
+        emojiPicker.hidden = true;
+    }
+});
+
 applyTheme(localStorage.getItem('chat-theme') || 'light');
 
 function submitName() {
