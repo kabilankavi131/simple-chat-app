@@ -15,6 +15,9 @@ const chatMenu = document.getElementById('chat-menu');
 const menuMembers = document.getElementById('menu-members');
 const menuTheme = document.getElementById('menu-theme');
 const clearChatButton = document.getElementById('clear-chat');
+const clearChatModal = document.getElementById('clearChatModal');
+const cancelClearChat = document.getElementById('cancel-clear-chat');
+const confirmClearChat = document.getElementById('confirm-clear-chat');
 let userName = "UnKnown"; // it will store only the current user name.
 let totalUsers = 0;
 let usersNames = [] // It will store all the connected users name who all connected to the server at a moment
@@ -147,6 +150,11 @@ function showWelcome() {
     chatBox.replaceChildren(welcome);
 }
 
+function setClearChatModalOpen(isOpen) {
+    clearChatModal.hidden = !isOpen;
+    if (isOpen) confirmClearChat.focus();
+}
+
 participantsToggle.addEventListener('click', () => setParticipantsOpen(participantsOverlay.hidden));
 participantsClose.addEventListener('click', () => setParticipantsOpen(false));
 participantsOverlay.addEventListener('click', (event) => {
@@ -164,7 +172,18 @@ menuTheme.addEventListener('click', () => {
 });
 clearChatButton.addEventListener('click', () => {
     setChatMenuOpen(false);
+    setClearChatModalOpen(true);
+});
+cancelClearChat.addEventListener('click', () => setClearChatModalOpen(false));
+confirmClearChat.addEventListener('click', () => {
     showWelcome();
+    setClearChatModalOpen(false);
+});
+clearChatModal.addEventListener('click', (event) => {
+    if (event.target === clearChatModal) setClearChatModalOpen(false);
+});
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !clearChatModal.hidden) setClearChatModalOpen(false);
 });
 
 themeToggle.addEventListener('click', () => {
