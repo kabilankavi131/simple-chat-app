@@ -10,6 +10,11 @@ const participantsOverlay = document.getElementById('participants-overlay');
 const participantsClose = document.getElementById('participants-close');
 const participantsList = document.getElementById('participants-list');
 const participantsCount = document.getElementById('participants-count');
+const menuToggle = document.getElementById('menu-toggle');
+const chatMenu = document.getElementById('chat-menu');
+const menuMembers = document.getElementById('menu-members');
+const menuTheme = document.getElementById('menu-theme');
+const clearChatButton = document.getElementById('clear-chat');
 let userName = "UnKnown"; // it will store only the current user name.
 let totalUsers = 0;
 let usersNames = [] // It will store all the connected users name who all connected to the server at a moment
@@ -129,10 +134,37 @@ function setParticipantsOpen(isOpen) {
     if (isOpen) renderParticipants();
 }
 
+function setChatMenuOpen(isOpen) {
+    chatMenu.hidden = !isOpen;
+    menuToggle.setAttribute('aria-expanded', String(isOpen));
+}
+
+function showWelcome() {
+    const welcome = document.createElement('div');
+    welcome.className = 'chat-welcome';
+    welcome.id = 'chatWelcome';
+    welcome.innerHTML = '<div class="welcome-orb">✦</div><strong>Welcome to Tech Buddies</strong><span>Say hello and start the conversation.</span>';
+    chatBox.replaceChildren(welcome);
+}
+
 participantsToggle.addEventListener('click', () => setParticipantsOpen(participantsOverlay.hidden));
 participantsClose.addEventListener('click', () => setParticipantsOpen(false));
 participantsOverlay.addEventListener('click', (event) => {
     if (event.target === participantsOverlay) setParticipantsOpen(false);
+});
+
+menuToggle.addEventListener('click', () => setChatMenuOpen(chatMenu.hidden));
+menuMembers.addEventListener('click', () => {
+    setChatMenuOpen(false);
+    setParticipantsOpen(true);
+});
+menuTheme.addEventListener('click', () => {
+    setChatMenuOpen(false);
+    themeToggle.click();
+});
+clearChatButton.addEventListener('click', () => {
+    setChatMenuOpen(false);
+    showWelcome();
 });
 
 themeToggle.addEventListener('click', () => {
@@ -153,6 +185,9 @@ emojiPicker.addEventListener('click', (event) => {
 document.addEventListener('click', (event) => {
     if (!emojiPicker.contains(event.target) && event.target !== emojiToggle) {
         emojiPicker.hidden = true;
+    }
+    if (!chatMenu.contains(event.target) && event.target !== menuToggle) {
+        setChatMenuOpen(false);
     }
 });
 

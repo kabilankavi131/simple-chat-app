@@ -34,7 +34,12 @@
                 <button id="theme-toggle" class="action-btn" type="button" aria-label="Switch to dark theme" title="Switch theme">
                     <span aria-hidden="true">☾</span>
                 </button>
-                <button class="action-btn" aria-label="More chat options">•••</button>
+                <button id="menu-toggle" class="action-btn" type="button" aria-label="More chat options" aria-expanded="false">•••</button>
+                <div id="chat-menu" class="chat-menu" hidden>
+                    <button id="menu-members" type="button"><span aria-hidden="true">👥</span> View members</button>
+                    <button id="menu-theme" type="button"><span aria-hidden="true">◐</span> Switch theme</button>
+                    <button id="clear-chat" type="button"><span aria-hidden="true">⌫</span> Clear messages</button>
+                </div>
             </div>
         </div>
 
