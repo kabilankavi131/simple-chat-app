@@ -21,22 +21,52 @@
             </div>
             <div class="group-info">
                 <h1 class="group-name">Tech Buddies</h1>
-                <p class="member-count"><span id="userCounts">1</span> Members <span class="online-indication"></span>
+                <p class="member-count"><span class="online-indication"></span><span
+                        id="connectionStatus">Connecting…</span> · <span id="userCounts">1</span> members
                 </p>
             </div>
             <div class="usernames">
                 <span id="fetchUsersNames">You</span><span id="moreUsers" class="more"></span>
             </div>
             <div class="header-actions">
-                <button class="action-btn">•••</button>
+                <button id="participants-toggle" class="action-btn" type="button" aria-label="View chat members"
+                    aria-expanded="false" title="Chat members">
+                    <span aria-hidden="true">👥</span>
+                </button>
+                <button id="theme-toggle" class="action-btn" type="button" aria-label="Switch to dark theme"
+                    title="Switch theme">
+                    <span aria-hidden="true">☾</span>
+                </button>
+                <button id="menu-toggle" class="action-btn" type="button" aria-label="More chat options"
+                    aria-expanded="false">•••</button>
+                <div id="chat-menu" class="chat-menu" hidden>
+                    <button id="menu-members" type="button"><span aria-hidden="true">👥</span> View members</button>
+                    <button id="menu-theme" type="button"><span aria-hidden="true">◐</span> Switch theme</button>
+                    <button id="clear-chat" type="button"><span aria-hidden="true">⌫</span> Clear messages</button>
+                </div>
             </div>
         </div>
 
 
-        <div id="chat-box"></div>
+        <div id="chat-box">
+            <div class="chat-welcome" id="chatWelcome">
+                <div class="welcome-orb">✦</div>
+                <strong>Welcome to Tech Buddies</strong>
+                <span>Say hello and start the conversation.</span>
+            </div>
+        </div>
         <div id="input-box">
+            <button id="emoji-toggle" class="utility-btn" type="button" aria-label="Add an emoji">☺</button>
+            <div class="emoji-picker" id="emoji-picker" hidden>
+                <button type="button" aria-label="Smile">😊</button>
+                <button type="button" aria-label="Thumbs up">👍</button>
+                <button type="button" aria-label="Celebrate">🎉</button>
+                <button type="button" aria-label="Heart">💜</button>
+                <button type="button" aria-label="Rocket">🚀</button>
+            </div>
             <input type="text" id="message-input" placeholder="Type a message..." />
-            <button id="send-btn" onclick="sendMessage()">Send</button>
+            <button id="send-btn" type="button" aria-label="Send message" onclick="sendMessage()">Send <span
+                    aria-hidden="true">↗</span></button>
         </div>
     </div>
     <div class="modal" id="nameModal">
@@ -45,6 +75,32 @@
             <input type="text" id="username" class="userName" placeholder="Enter your name" required>
             <button onclick="submitName()">Submit</button>
         </div>
+    </div>
+    <div class="modal" id="clearChatModal" hidden>
+        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="clear-chat-title"
+            aria-describedby="clear-chat-description">
+            <h2 id="clear-chat-title">Clear all messages?</h2>
+            <p class="modal-copy" id="clear-chat-description">This will remove the messages from this chat view. This
+                action cannot be undone.</p>
+            <div class="modal-actions">
+                <button id="cancel-clear-chat" class="modal-secondary" type="button">Cancel</button>
+                <button id="confirm-clear-chat" class="modal-danger" type="button">Clear messages</button>
+            </div>
+        </div>
+    </div>
+    <div class="participants-overlay" id="participants-overlay" hidden>
+        <section class="participants-panel" role="dialog" aria-modal="true" aria-labelledby="participants-title">
+            <div class="participants-heading">
+                <div>
+                    <span class="panel-eyebrow">CHAT MEMBERS</span>
+                    <h2 id="participants-title">Who's here</h2>
+                </div>
+                <button id="participants-close" class="action-btn" type="button"
+                    aria-label="Close members panel">×</button>
+            </div>
+            <p class="participants-subtitle"><span id="participants-count">0</span> people in this conversation</p>
+            <div class="participants-list" id="participants-list"></div>
+        </section>
     </div>
     <script src="./JS/script.js">
 
