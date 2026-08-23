@@ -36,13 +36,16 @@ ws.onmessage = (event) => {
 
     // Destructure the message and username from the server response
     const { username, message, userCount, users } = serverMessage;
-    usersNames = users;
+    usersNames = users || [];
     document.getElementById("userCounts").innerText = userCount;
     const visibleUsers = usersNames.slice(0, 3);
     document.getElementById("fetchUsersNames").innerText = visibleUsers.join(", ") || "You";
     const remainingUsers = Math.max(0, userCount - visibleUsers.length);
     document.getElementById("moreUsers").innerText = remainingUsers ? ` + ${remainingUsers} more` : "";
     renderParticipants();
+
+    if (serverMessage.type === 'presence') return;
+    if (typeof message !== 'string' || !message.trim()) return;
 
     // Display the message in the UI
     displayMessage(message, username || 'server');
