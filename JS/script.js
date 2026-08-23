@@ -56,6 +56,13 @@ function sendMessage() {
     }
 }
 
+messageInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        sendMessage();
+    }
+});
+
 function displayMessage(message, sender) {
     const messageDiv = document.createElement('div');
     const nameContainer = document.createElement('div');
@@ -85,4 +92,3 @@ function submitName() {
         alert('Please enter your name.');
     }
 }
-
